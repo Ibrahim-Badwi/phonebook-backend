@@ -1,11 +1,8 @@
-const { request, response } = require("express");
 const express = require("express");
-const app = express();
 const morgan = require('morgan');
-const PORT = 3001;
 
-app.use(express.json());
-app.use(morgan('combined'));
+const app = express();
+const PORT = 3001;
 
 let persons = [
   {
@@ -40,6 +37,24 @@ let persons = [
   },
 ];
 
+/* morgan assignBody middleware */
+const assignBody = (request, response, next) => {
+  (request.method === 'POST')
+    ? request.body = JSON.stringify(request.body)
+    : request.body = ""
+    
+  next();
+};
+
+/* add body token to morgan */
+morgan.token('body', getBody = (req) => {
+  return req.body;
+});
+
+app.use(express.json());
+app.use(assignBody);
+app.use(morgan(':method :url :status - :response-time :body'));
+
 app.get('/info', (request, response) => {
   const info = `<p>Phonebook has info ${persons.length} people</p>
                 <p>${new Date}</p>
@@ -72,7 +87,6 @@ app.delete('/api/persons/:id', (request, response) => {
 const generateRandomId = (limit=1000) => {
   return Math.floor(Math.random() * limit);
 }
-
 app.post('/api/persons', (request, response) => {
   const body = request.body;
 
