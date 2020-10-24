@@ -54,6 +54,7 @@ morgan.token('body', getBody = (req) => {
 app.use(express.json());
 app.use(cors());
 app.use(assignBody);
+app.use(express.static('build'));
 app.use(morgan(':method :url :status - :response-time :body'));
 
 app.get('/info', (request, response) => {
