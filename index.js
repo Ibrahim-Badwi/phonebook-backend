@@ -1,8 +1,8 @@
 const express = require("express");
 const morgan = require('morgan');
+const cors = require('cors');
 
 const app = express();
-const PORT = 3001;
 
 let persons = [
   {
@@ -40,9 +40,9 @@ let persons = [
 /* morgan assignBody middleware */
 const assignBody = (request, response, next) => {
   (request.method === 'POST')
-    ? request.body = JSON.stringify(request.body)
-    : request.body = ""
-    
+  ? request.body = JSON.stringify(request.body)
+  : request.body = ""
+  
   next();
 };
 
@@ -52,12 +52,13 @@ morgan.token('body', getBody = (req) => {
 });
 
 app.use(express.json());
+app.use(cors());
 app.use(assignBody);
 app.use(morgan(':method :url :status - :response-time :body'));
 
 app.get('/info', (request, response) => {
   const info = `<p>Phonebook has info ${persons.length} people</p>
-                <p>${new Date}</p>
+  <p>${new Date}</p>
   `
   response.send(info);
 });
@@ -69,7 +70,7 @@ app.get('/api/persons', (request, response) => {
 app.get('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id);
   const person = persons.find(person => person.id === id);
-
+  
   console.log(person);
   if(person) {
     return response.json(person)
@@ -80,7 +81,7 @@ app.get('/api/persons/:id', (request, response) => {
 app.delete('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id);
   persons = persons.filter(person => person.id !== id)
-
+  
   response.status(204).end();
 });
 
@@ -89,7 +90,7 @@ const generateRandomId = (limit=1000) => {
 }
 app.post('/api/persons', (request, response) => {
   const body = request.body;
-
+  
   if(!body.name) {
     return response.status(400).json({
       error: 'name missing'
@@ -110,10 +111,11 @@ app.post('/api/persons', (request, response) => {
   }
   
   persons = persons.concat(person);
-
+  
   response.json(request.body);
 });
 
+const PORT = 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
