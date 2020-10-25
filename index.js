@@ -90,8 +90,10 @@ const generateRandomId = (limit=1000) => {
   return Math.floor(Math.random() * limit);
 }
 app.post('/api/persons', (request, response) => {
-  const body = request.body;
+  const body = JSON.parse(request.body);
+  console.log('post start', body);  
   
+
   if(!body.name) {
     return response.status(400).json({
       error: 'name missing'
@@ -112,7 +114,7 @@ app.post('/api/persons', (request, response) => {
   }
   
   persons = persons.concat(person);
-  
+  console.log('OK', request.body)
   response.json(request.body);
 });
 
