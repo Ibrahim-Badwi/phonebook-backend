@@ -1,3 +1,7 @@
-# phonbook node.js/express backend
+# full-stack MERN phonbook app 
 
-https://lit-thicket-58030.herokuapp.com/
+React
+Express / Node.js
+MongoDB
+
+https://phonebook-app-b.herokuapp.com/
